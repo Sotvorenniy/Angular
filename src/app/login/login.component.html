@@ -1,0 +1,55 @@
+<div class="loginBody">
+  <mat-card>
+    <form [formGroup]="form">
+      <h1 class="header-h1"><b>Вход</b></h1>
+      <p class="header-p"> Введите данные для входа.
+        <br> Если вы еще не зарегистрированы, перейдите
+        <br> на страницу регистрации.</p>
+      <div>
+        <mat-form-field appearance="outline" class="width">
+          <mat-label>Введите e-mail</mat-label>
+          <label>
+            <input matInput class="form-control"
+                   name="email"
+                   placeholder="example@mail.com"
+                   formControlName="email"
+                   autocomplete="off"
+                   required>
+          </label>
+          <mat-error
+            *ngIf="form.get('email').invalid" >
+             {{getErrorMessage()}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Введите пароль</mat-label>
+          <label>
+            <input matInput type="password"
+                   [type]="hide ? 'password' : 'text'"
+                   formControlName="password"
+                   autocomplete="off"
+           >
+          </label>
+          <mat-error *ngIf="form.get('password').errors?.require" > {{getErrorMessagePass()}} </mat-error>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+      </div>
+
+      <div class="footer-btn">
+
+      <button mat-flat-button color="accent"  [disabled]="form.invalid"  routerLink="../todo-list"
+              (click)="addUser()" > Войти </button>
+      <button mat-flat-button	color="primary" routerLink="../registration"> Зарегистрироваться </button>
+
+      </div>
+
+    </form>
+
+  </mat-card>
+</div>

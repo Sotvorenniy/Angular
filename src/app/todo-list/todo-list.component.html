@@ -1,0 +1,73 @@
+<div class="todo-body">
+
+  <mat-toolbar class="toolbar" color="primary">
+    <p class="toolbar-p"> Мои задачи </p>
+
+    <mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent>
+      <button mat-menu-item routerLink="../user-profile">Мой профиль</button>
+      <button mat-menu-item routerLink="">Выход</button>
+    </ng-template>
+  </mat-menu>
+
+    <mat-icon-button class="material-icons" [matMenuTriggerFor]="appMenu">
+      <mat-icon>face</mat-icon>
+    </mat-icon-button>
+  </mat-toolbar>
+
+  <div class="main-container">
+
+    <mat-form-field appearance="outline" class="todo-input">
+    <input matInput placeholder="Запиши, что нужно сделать"
+           [(ngModel)]="todoTitle"
+           (keyup.enter)="addTodo()">
+    </mat-form-field>
+
+    <div class="todo-item" *ngFor="let todo of todosFiltered()">
+      <div class="todo-item-left">
+
+        <mat-checkbox color="primary"
+                      [(ngModel)]="todo.completed"
+                      (change)="doneEdit(todo)">
+        </mat-checkbox>
+
+        <div *ngIf="!todo.editing; else editingTodo"
+             class="todo-item-label"
+             [ngClass]="{ 'completed' : todo.completed }"
+             (dblclick)="editTodo(todo)">
+          {{ todo.title }}
+        </div>
+        <ng-template #editingTodo>
+          <input matInput class="todo-item-edit"
+                 [(ngModel)]="todo.title"
+                 (blur)="doneEdit(todo)"
+                 (keyup.enter)="doneEdit(todo)"
+                 (keyup.esc)="cancelEdit(todo)"
+                 autofocus>
+        </ng-template>
+      </div>
+
+      <mat-icon-button class="remove-item" (click)="deleteTodo(todo.id)"> <mat-icon>highlight_off</mat-icon> </mat-icon-button>
+    </div>
+
+    <div class="extra-container">
+      <div>
+        <button mat-raised-button class="button-main"
+                [ngClass]="{'active': filter === 'all'}"
+                (click)="filter='all'">
+          Все задачи
+        </button>
+        <button mat-raised-button	class="button-main" color="accent"
+                [ngClass]="{'active': filter === 'active'}"
+                (click)="filter='active'">
+          Активные
+        </button>
+        <button mat-raised-button	 class="button-main" color="primary"
+                [ngClass]="{'active': filter === 'completed'}"
+                (click)="filter='completed'">
+          Завершеные
+        </button>
+      </div>
+    </div>
+</div>
+</div>

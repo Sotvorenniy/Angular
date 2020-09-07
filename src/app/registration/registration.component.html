@@ -1,0 +1,107 @@
+<div class="loginBody">
+
+<div class="container-form">
+  <mat-card>
+    <form [formGroup]="form">
+      <h1 class="header-h1"><b>Регистрация</b></h1>
+      <p class="header-p"> Пожалуйста, введите правильные данные. </p>
+
+
+      <div>
+        <mat-form-field appearance="outline" class="width">
+          <mat-label>Введите имя</mat-label>
+          <label>
+            <input
+              matInput
+              class="form-control"
+              name="name"
+              formControlName="name"
+              autocomplete="off"
+              required>
+          </label>
+          <mat-error *ngIf="form.get('name').invalid">
+            {{getErrorMessageName()}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="width">
+          <mat-label>Придумайте логин</mat-label>
+          <label>
+            <input matInput
+                   class="form-control"
+                   name="login"
+                   autocomplete="off"
+                   formControlName="login"
+                   required>
+          </label>
+          <mat-error
+            *ngIf="form.get('login').invalid">
+            {{getErrorMessageLog()}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="width" >
+          <mat-label>Введите e-mail</mat-label>
+          <label>
+            <input matInput
+                   class="form-control"
+                   name="email"
+                   placeholder="example@mail.com"
+                   formControlName="email"
+                   autocomplete="off"
+                   required>
+          </label>
+          <mat-error
+            *ngIf="form.get('email').invalid">
+            {{getErrorMessage()}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Введите пароль</mat-label>
+          <label>
+            <input matInput
+                   class="form-control"
+                   formControlName="password"
+                   type="password"
+                   [type]="hide ? 'password' : 'text'"
+                   autocomplete="off"
+                   required>
+          </label>
+          <mat-error *ngIf="form.get('password').invalid"> {{getErrorMessagePass()}} </mat-error>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+
+      </div>
+
+        <button mat-flat-button
+                color="primary"
+                [disabled]="form.invalid"
+                (click)="addUser()"
+                routerLink="../todo-list">
+          Зарегистрироваться
+        </button>
+
+
+    </form>
+
+    <p
+      class="bottom-p"> Я принимаю условия пользовательского соглашения
+      <mat-checkbox checked="true" > </mat-checkbox>
+    </p>
+
+  </mat-card>
+  <div class="footer-login">
+    <a mat-button color="Basic" routerLink=""> <mat-icon>home</mat-icon> Назад к логину </a>
+  </div>
+</div>
+
+</div>

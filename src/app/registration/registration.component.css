@@ -1,0 +1,57 @@
+.loginBody {
+  height: 100%;
+  width: 100%;
+  background-image: url(https://images.unsplash.com/photo-1458682625221-3a45f8a844c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1934&q=80);
+  background-repeat: no-repeat;
+}
+
+.mat-card {
+  width: 450px;
+  padding: 40px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  box-shadow: 5px 5px 12px 10px rgba(44, 48, 50, 0.69);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.header-h1 {
+  text-align: center;
+  margin-bottom: 15px;
+  text-decoration: inherit;
+}
+
+.header-p {
+  text-align: center;
+  text-decoration: inherit;
+}
+
+.bottom-p{
+  margin-top: 23px;
+}
+
+.mat-checkbox {
+  margin-left: 75px;
+}
+
+
+.container-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-login {
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+  margin-top: 750px;
+  margin-right: 1000px;
+}
