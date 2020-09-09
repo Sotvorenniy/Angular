@@ -7,6 +7,7 @@ import {
 } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import * as users from './reducers/user.reducer';
+import * as todos from './reducers/todo.reducer';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { RouterStateUrl } from './router';
 import {RouterEffects} from './effects/router.effects';
@@ -15,13 +16,13 @@ import {routerReducer, RouterReducerState} from '@ngrx/router-store';
 
 export interface State {
   users: users.State;
-  // todos: todos.State;
+  todos: todos.State;
   router: RouterReducerState<RouterStateUrl>,
 }
 
 export const reducers: ActionReducerMap<State> = {
  users: users.reducer,
-  // todos: todos.reducer,
+  todos: todos.reducer,
   router: routerReducer,
 };
 

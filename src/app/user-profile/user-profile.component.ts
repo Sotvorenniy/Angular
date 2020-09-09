@@ -24,8 +24,9 @@ export class UserProfileComponent implements OnInit {
     name: new FormControl ('', [Validators.required, Validators.pattern('^[A-Za-zА-Яа-яЁё]{2,60}')]),
   });
 
-  public  user: User;
+  public user: User;
   user$ = this.store.pipe(select(getUserSelector));
+
   constructor( private fb: FormBuilder, private store: Store<fromReducer.users.State> ) { }
 
 
