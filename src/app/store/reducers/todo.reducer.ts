@@ -23,51 +23,26 @@ export const initialState: State = adapter.getInitialState({
 export function reducer(state = initialState, action: TodoActions): State {
 
   switch (action.type) {
-    case TodoActionTypes.todoGetTodo:
-    case TodoActionTypes.todoGetTodoById:
+    case TodoActionTypes.todoSetTodo:
       return {
         ...state,
+        todo: action.payload,
         loading: true
       };
 
     case TodoActionTypes.todoAddTodo:
-    // case TodoActionTypes.todoUpdateTodo:
-      return  {
+      return {
         ...state,
         todo: [...state.todo, action.payload],
         loading: true
       };
 
-    case TodoActionTypes.todoGetTodoSuccess:
-      return adapter.setAll([action.payload], {
+    case TodoActionTypes.todoDeleteTodo:
+      return {
         ...state,
-        loading: false,
-        loaded: true
-      });
+        todo: state.todo.filter((todo) => todo.id !== action.payload.id),
+      };
 
-    case TodoActionTypes.todoGetTodoByIdSuccess:
-      return { ...state, selectedTodoId: action.payload.id, loading: false };
-
-    case TodoActionTypes.todoAddTodoSuccess:
-      return adapter.addOne(action.payload, {
-        ...state,
-        loading: false,
-        loaded: true
-      });
-
-    case TodoActionTypes.todoUpdateTodoSuccess: {
-      return adapter.updateOne(
-        {
-          id: action.payload.id,
-          changes: action.payload
-        },
-        {
-          ...state,
-          loading: false,
-          loaded: true
-        }
-      );
-    }
 
     case TodoActionTypes.todoError:
       return {

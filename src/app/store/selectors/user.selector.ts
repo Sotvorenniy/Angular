@@ -1,4 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromRouter from '@ngrx/router-store';
+
 import {userEntitySelectors} from '../reducers/user.reducer';
 // @ts-ignore
 // import * as fromReducers from '@appStore';

@@ -1,13 +1,13 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Todo} from '../store/models/todo.model';
 import {select, Store} from '@ngrx/store';
-import {getTodoSelector} from '../store/selectors/todo.selector';
 // @ts-ignore
 import * as fromReducer from '../store/reducers';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../store/models/user.model';
-import {AddUser} from '../store/actions/user.actions';
-import {AddTodo, GetTodo} from '../store/actions/todo.actions';
+import {AddTodo, DeleteTodo, SetTodo} from '../store/actions/todo.actions';
+import {getTodoSelector} from "../store/selectors/todo.selector";
+
+
 
 @Component({
   selector: 'app-todo-list',
@@ -17,7 +17,9 @@ import {AddTodo, GetTodo} from '../store/actions/todo.actions';
 })
 export class TodoListComponent implements OnInit {
 
-  public todos: Todo[];
+  todoList: Todo[];
+  public todoUrl = 'http://localhost:3000/todo-list';
+  todoList$ = this.store.pipe(select(getTodoSelector));
 
   todoTitle: string;
   idForTodo: number;
@@ -40,13 +42,8 @@ export class TodoListComponent implements OnInit {
       editing: false
     };
 
-    this.todos.push(newTodo);
-
-    this.http.post('http://localhost:3000/todo-list', newTodo).subscribe((todo: Todo) => {
-      // console.log('todo.id', todo.id);
-      // window.localStorage.setItem('todo', JSON.stringify(todo));
+    this.http.post(this.todoUrl, newTodo).subscribe((todo: Todo) => {
       this.store.dispatch(new AddTodo(todo));
-      // console.log("this.todos", new AddTodo(todo));
     });
 
     this.todoTitle = '';
@@ -60,7 +57,6 @@ export class TodoListComponent implements OnInit {
 
   public doneEdit(todo: Todo): void {
     if (todo.title.trim().length === 0) {
-      //get from DB and edit + push data to todo
       todo.title = this.beforeEditCache;
     }
     todo.editing = false;
@@ -71,46 +67,35 @@ export class TodoListComponent implements OnInit {
     todo.editing = false;
   }
 
-  public deleteTodo(id: number): void {
-
-    const allTodo = {};
-
-    this.http.get('http://localhost:3000/todo-list', allTodo).subscribe((todos) => {
-
-      console.log(todos);
-
+  public deleteTodo(todo: Todo): void {
+    this.http.delete(`${this.todoUrl}/${todo.id}`, {}).subscribe((deletedTodo: Todo) => {
+      this.store.dispatch(new DeleteTodo(deletedTodo));
     });
-    //get from DB and push data to todo
-    // this.http.delete('http://localhost:3000/todo-list', ).pipe()
-
-    // this.todos = this.todos.filter(todo => todo.id !== id);
   }
 
   public todosFiltered(): Todo[] {
     if (this.filter === 'all') {
-      return this.todos;
+      return this.todoList;
     } else if (this.filter === 'active') {
-      return this.todos.filter(todo => !todo.completed);
+      return this.todoList.filter(todo => !todo.completed);
     } else if (this.filter === 'completed') {
-      return this.todos.filter(todo => todo.completed);
+      return this.todoList.filter(todo => todo.completed);
     }
-
-    return this.todos;
+    return this.todoList;
   }
 
   ngOnInit(): void {
 
-    // get data from DB
+    this.http.get(this.todoUrl).subscribe((todoList: Todo[]) => {
+      this.store.dispatch(new SetTodo(todoList));
+    });
+
+    this.todoList$.subscribe((todoList) => {
+      this.todoList = todoList;
+    });
 
     this.filter = 'all';
     this.beforeEditCache = '';
     this.todoTitle = '';
-    this.todos = [
-      {
-        title: 'Меня можно отредактировать ',
-        completed: false,
-        editing: false,
-      },
-    ];
   }
 }

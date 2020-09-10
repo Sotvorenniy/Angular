@@ -3,26 +3,17 @@ import { Todo } from '../models/todo.model';
 
 
 export enum TodoActionTypes {
-  todoGetTodo = '[Todo] get',
-  todoGetTodoSuccess = '[Todo] get todo success',
+  todoSetTodo = '[Todo] set',
   todoAddTodo = '[Todo] add todo',
-  todoAddTodoSuccess = '[Todo] add todo success',
   todoGetTodoById = '[Todo] get todo by id',
-  todoGetTodoByIdSuccess = '[Todo] get todo by id success',
   todoUpdateTodo = '[Todo] update todo',
-  todoUpdateTodoSuccess = '[Todo] update todo success',
-  todoError = '[Todo] error'
+  todoError = '[Todo] error',
+  todoDeleteTodo = '[Todo] delete'
 };
 
-export class GetTodo implements Action {
-  readonly type = TodoActionTypes.todoGetTodo;
-
+export class SetTodo implements Action {
+  readonly type = TodoActionTypes.todoSetTodo;
   constructor(public payload: Todo[]){}
-}
-
-export class GetTodoSuccess implements Action {
-  readonly type = TodoActionTypes.todoGetTodoSuccess;
-  constructor(public payload: Todo) {}
 }
 
 export class AddTodo implements Action {
@@ -31,19 +22,9 @@ export class AddTodo implements Action {
   constructor(public payload: Todo) {}
 }
 
-export class AddTodoSuccess implements Action {
-  readonly type = TodoActionTypes.todoAddTodoSuccess;
-  constructor(public payload: Todo) {}
-}
-
 export class GetTodoById implements Action {
   readonly type = TodoActionTypes.todoGetTodoById;
   constructor(public payload: number) {}
-}
-
-export class GetTodoByIdSuccess implements Action {
-  readonly type = TodoActionTypes.todoGetTodoByIdSuccess;
-  constructor(public payload: Todo) {}
 }
 
 export class UpdateTodo implements Action {
@@ -51,11 +32,10 @@ export class UpdateTodo implements Action {
   constructor(public payload: Todo) {}
 }
 
-export class UpdateTodoSuccess implements Action {
-  readonly type = TodoActionTypes.todoUpdateTodoSuccess;
+export class DeleteTodo implements Action {
+  readonly type = TodoActionTypes.todoDeleteTodo;
   constructor(public payload: Todo) {}
 }
-
 
 export class TodoError implements Action {
   readonly type = TodoActionTypes.todoError;
@@ -63,12 +43,9 @@ export class TodoError implements Action {
 }
 
 export type TodoActions =
-  | GetTodo
-  | GetTodoSuccess
+  | SetTodo
   | AddTodo
-  | AddTodoSuccess
   | GetTodoById
-  | GetTodoByIdSuccess
   | UpdateTodo
-  | UpdateTodoSuccess
-  | TodoError;
+  | TodoError
+  | DeleteTodo;
