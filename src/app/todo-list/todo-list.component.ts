@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from '../store/models/todo.model';
 import {select, Store} from '@ngrx/store';
 // @ts-ignore
@@ -6,28 +6,54 @@ import * as fromReducer from '../store/reducers';
 import {HttpClient} from '@angular/common/http';
 import {AddTodo, DeleteTodo, SetTodo} from '../store/actions/todo.actions';
 import {getTodoSelector} from "../store/selectors/todo.selector";
-
+import {filter} from "rxjs/operators";
+import {environment} from '../../environments/environment';
 
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, OnDestroy {
 
-  todoList: Todo[];
-  public todoUrl = 'http://localhost:3000/todo-list';
-  todoList$ = this.store.pipe(select(getTodoSelector));
+  public todoList: Todo[];
+  // public todoUrl = 'http://localhost:3000/todo-list';
+  public todoList$ = this.store.pipe(select(getTodoSelector), filter(Boolean));
 
-  todoTitle: string;
-  idForTodo: number;
-  beforeEditCache: string;
-  filter: string;
-  value = 'Очистить';
+  public todoTitle: string;
+  public idForTodo: number;
+  public beforeEditCache: string;
+  public filter: string;
+  public value = 'Очистить';
+  public subscribes = [];
 
-  constructor(private store: Store<fromReducer.todos.State>, private http: HttpClient) {
+  public environment = environment.url;
+
+  constructor(
+    private store: Store<fromReducer.todos.State>,
+    private http: HttpClient,
+  ) { }
+
+  ngOnInit(): void {
+    this.filter = 'all';
+    this.beforeEditCache = '';
+    this.todoTitle = '';
+
+    this.subscribes.push(
+      this.http.get(this.environment).subscribe((todoList: Todo[]) => {
+        this.store.dispatch(new SetTodo(todoList));
+      }),
+
+      this.todoList$.subscribe((todoList) => {
+        this.todoList = this.todosFiltered(todoList);
+        console.log( this.todoList );
+      }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscribes.map((s) => s.unsubscribe());
   }
 
   public addTodo(): void {
@@ -42,7 +68,7 @@ export class TodoListComponent implements OnInit {
       editing: false
     };
 
-    this.http.post(this.todoUrl, newTodo).subscribe((todo: Todo) => {
+    this.http.post(this.environment, newTodo).subscribe((todo: Todo) => {
       this.store.dispatch(new AddTodo(todo));
     });
 
@@ -68,34 +94,19 @@ export class TodoListComponent implements OnInit {
   }
 
   public deleteTodo(todo: Todo): void {
-    this.http.delete(`${this.todoUrl}/${todo.id}`, {}).subscribe((deletedTodo: Todo) => {
+    this.http.delete(`${this.environment}/${todo.id}`, {}).subscribe((deletedTodo: Todo) => {
       this.store.dispatch(new DeleteTodo(deletedTodo));
     });
   }
 
-  public todosFiltered(): Todo[] {
+  public todosFiltered(todoList): Todo[] {
     if (this.filter === 'all') {
-      return this.todoList;
+      return todoList;
     } else if (this.filter === 'active') {
-      return this.todoList.filter(todo => !todo.completed);
+      return todoList.filter(todo => !todo.completed);
     } else if (this.filter === 'completed') {
-      return this.todoList.filter(todo => todo.completed);
+      return todoList.filter(todo => todo.completed);
     }
-    return this.todoList;
-  }
-
-  ngOnInit(): void {
-
-    this.http.get(this.todoUrl).subscribe((todoList: Todo[]) => {
-      this.store.dispatch(new SetTodo(todoList));
-    });
-
-    this.todoList$.subscribe((todoList) => {
-      this.todoList = todoList;
-    });
-
-    this.filter = 'all';
-    this.beforeEditCache = '';
-    this.todoTitle = '';
+    return todoList;
   }
 }

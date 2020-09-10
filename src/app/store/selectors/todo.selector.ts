@@ -5,6 +5,6 @@ export const getTodoStore = createFeatureSelector('todos');
 
 export const getTodoSelector = createSelector(
   getTodoStore,
-  (state: any) => state.todo
+  (state: any) => state.todo || []
 );
 
