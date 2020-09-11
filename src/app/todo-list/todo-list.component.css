@@ -1,6 +1,6 @@
 .todo-body {
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
+  width: auto;
   background: radial-gradient(circle, rgba(238,174,202,0.20211834733893552) 0%, rgba(172,180,190,1) 100%);
 }
 

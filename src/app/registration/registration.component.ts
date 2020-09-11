@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import * as fromReducer from '../store/reducers';
 import {AddUser} from '../store/actions/user.actions';
 import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-registration',
@@ -24,6 +25,7 @@ export class RegistrationComponent implements OnInit {
   public hide = true;
 
   public user: User;
+  public environment = environment.urlUser;
 
   constructor(private fb: FormBuilder,
               private store: Store<fromReducer.users.State>,
@@ -63,10 +65,10 @@ export class RegistrationComponent implements OnInit {
 
   public addUser(): void {
     // this.store.dispatch(new AddUser(this.form.getRawValue()));
-    this.http.post('http://localhost:3000/users', this.form.getRawValue()).subscribe((value: User) => {
-      console.log('VALUE', value);
-      window.localStorage.setItem('user', JSON.stringify(value));
-      this.store.dispatch(new AddUser(value));
+    this.http.post(this.environment, this.form.getRawValue()).subscribe((user: User) => {
+      // console.log('VALUE', value);
+      window.localStorage.setItem('user', JSON.stringify(user));
+      this.store.dispatch(new AddUser(user));
     });
   }
 

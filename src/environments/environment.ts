@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   url: 'http://localhost:3000/todo-list',
+  urlUser: 'http://localhost:3000/users',
 };
 
 /*

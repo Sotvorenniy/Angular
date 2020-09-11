@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators, FormGroup, FormBuilder, NgModel} from '@angular/forms';
+import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import {Store} from '@ngrx/store';
 // @ts-ignore
 import * as fromReducer from '../store/reducers';
 import {User} from '../store/models/user.model';
 import {AddUser} from '../store/actions/user.actions';
+// import {HttpClient} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -20,15 +22,25 @@ export class LoginComponent implements OnInit {
 
   public hide = true;
   public user: User;
+  public environment = environment.urlUser;
 
   constructor(
     private fb: FormBuilder,
     private store: Store<fromReducer.users.State>,
+    // private http: HttpClient,
     ){}
+
+  // public addUser(): void {
+  //   // console.log(this.form.getRawValue());
+  //   this.store.dispatch(new AddUser(this.form.getRawValue()));
+  // }
 
   public addUser(): void {
     // console.log(this.form.getRawValue());
-    this.store.dispatch(new AddUser(this.form.getRawValue()));
+    // this.http.get(this.environment, this.form.getRawValue()).subscribe(() => {
+        this.store.dispatch(new AddUser(this.form.getRawValue()));
+    //   }
+    // );
   }
 
   public getErrorMessage(): string {

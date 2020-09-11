@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from '../store/models/todo.model';
 import {select, Store} from '@ngrx/store';
 // @ts-ignore
@@ -18,7 +18,6 @@ import {environment} from '../../environments/environment';
 export class TodoListComponent implements OnInit, OnDestroy {
 
   public todoList: Todo[];
-  // public todoUrl = 'http://localhost:3000/todo-list';
   public todoList$ = this.store.pipe(select(getTodoSelector), filter(Boolean));
 
   public todoTitle: string;
@@ -47,7 +46,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
       this.todoList$.subscribe((todoList) => {
         this.todoList = this.todosFiltered(todoList);
-        console.log( this.todoList );
+        // console.log( this.todoList );
       }),
     );
   }
@@ -77,6 +76,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
 
   public editTodo(todo: Todo): void {
+
     this.beforeEditCache = todo.title;
     todo.editing = true;
   }
