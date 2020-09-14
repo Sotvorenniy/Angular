@@ -6,7 +6,7 @@ import {select, Store} from '@ngrx/store';
 import * as fromReducer from '../store/reducers';
 import {getUserSelector} from '../store/selectors/user.selector';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AddUser, UpdateUser} from '../store/actions/user.actions';
+import {GetUser, UpdateUser} from '../store/actions/user.actions';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.store.dispatch(new AddUser(JSON.parse(window.localStorage.getItem('user'))));
+    this.store.dispatch(new GetUser(JSON.parse(window.localStorage.getItem('user'))));
     this.user$.subscribe((user) => {
 
       this.user = user;

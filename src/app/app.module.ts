@@ -15,14 +15,12 @@ import {RouterModule} from '@angular/router';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './store';
 import {EffectsModule} from '@ngrx/effects';
 import * as fromStore from 'app/store/index';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from './store/router';
 import {HttpClientModule} from '@angular/common/http';
-
-
+import {ApiService} from "./services/api.service";
 
 
 @NgModule({
@@ -63,7 +61,8 @@ import {HttpClientModule} from '@angular/common/http';
     {
       provide: RouterStateSerializer,
       useClass: CustomRouterStateSerializer,
-    }
+    },
+    ApiService
   ],
   bootstrap: [AppComponent],
 })

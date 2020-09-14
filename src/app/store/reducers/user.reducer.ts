@@ -27,51 +27,55 @@ export const initialState: State = adapter.getInitialState({
 export function reducer(state = initialState, action: UserActions): State {
 
   switch (action.type) {
-    case UserActionTypes.userGetUser:
+    case UserActionTypes.userAddUser:
     case UserActionTypes.userGetUserById:
+      console.log('userAddUser',action.payload);
       return {
         ...state,
         loading: true
       };
 
-    case UserActionTypes.userAddUser:
+    case UserActionTypes.userGetUser:
     case UserActionTypes.userUpdateUser:
       return  {
         ...state,
-        user: action.payload,
+        // user: action.payload,
         loading: true
       };
 
-    case UserActionTypes.userGetUserSuccess:
+    case UserActionTypes.userAddUserSuccess:
+      console.log('userAddUserSuccess',action.payload);
       return adapter.setAll([action.payload], {
         ...state,
         loading: false,
         loaded: true
       });
 
-    case UserActionTypes.userGetUserByIdSuccess:
-      return { ...state, selectedUserId: action.payload.id, loading: false };
+    // case UserActionTypes.userGetUserByIdSuccess:
+    //   return { ...state, selectedUserId: action.payload.id, loading: false };
 
-    case UserActionTypes.userAddUserSuccess:
+    case UserActionTypes.userGetUserSuccess:
+      console.log('userGetUserSuccess',action.payload);
       return adapter.addOne(action.payload, {
         ...state,
+        user: action.payload,
         loading: false,
         loaded: true
       });
 
-    case UserActionTypes.userUpdateUserSuccess: {
-      return adapter.updateOne(
-        {
-          id: action.payload.id,
-          changes: action.payload
-        },
-        {
-          ...state,
-          loading: false,
-          loaded: true
-        }
-      );
-    }
+    // case UserActionTypes.userUpdateUserSuccess: {
+    //   return adapter.updateOne(
+    //     {
+    //       id: action.payload.id,
+    //       changes: action.payload
+    //     },
+    //     {
+    //       ...state,
+    //       loading: false,
+    //       loaded: true
+    //     }
+    //   );
+    // }
 
     case UserActionTypes.userError:
       return {
