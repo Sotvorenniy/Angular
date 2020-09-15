@@ -11,8 +11,6 @@ export enum UserActionTypes {
   userUpdateUser = '[User] update user',
   userUpdateUserSuccess = '[User] update user success',
   userError = '[User] error',
-  userGetUserTodo = '[User] get user todo',
-  userGetUserTodoSuccess = '[User] get user todo success',
 }
 
 export class AddUser implements Action {
@@ -34,16 +32,6 @@ export class GetUser implements Action {
 
 export class GetUserSuccess implements Action {
   readonly type = UserActionTypes.userGetUserSuccess;
-  constructor(public payload?: any) {}
-}
-
-export class GetUserTodo implements Action {
- readonly type = UserActionTypes.userGetUserTodo;
-  constructor(public payload?: any) {}
-}
-
-export class GetUserTodoSuccess implements Action {
-  readonly type = UserActionTypes.userGetUserTodoSuccess;
   constructor(public payload?: any) {}
 }
 
@@ -83,6 +71,4 @@ export type UserActions =
   | GetUserByIdSuccess
   | UpdateUser
   | UpdateUserSuccess
-  | UserError
-  | GetUserTodo
-  | GetUserTodoSuccess;
+  | UserError;

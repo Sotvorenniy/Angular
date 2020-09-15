@@ -23,9 +23,9 @@ export class RegistrationComponent implements OnInit {
   });
 
   public hide = true;
-
   public user: User;
   public environment = environment;
+
 
   constructor(private fb: FormBuilder,
               private store: Store<fromReducer.users.State>,
@@ -62,6 +62,7 @@ export class RegistrationComponent implements OnInit {
     }
     return this.form.get('password').hasError('pattern') ? 'Пароль должен содержать латинские буквы и быть больше 6 символов' : '';
   }
+
 
   public addUser(): void {
     this.http.post(`${environment.url}/users/`, this.form.getRawValue()).subscribe((user: User) => {

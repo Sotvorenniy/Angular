@@ -1,14 +1,18 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {User} from "../store/models/user.model";
-import {AddUser} from "../store/actions/user.actions";
-import {FormBuilder} from "@angular/forms";
+import {Todo} from "../store/models/todo.model";
+
+
+
+const httpOptions = {
+  headers: new HttpHeaders(localStorage.getItem("token")),
+};
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient) {
   }
 
   public login(user): Observable<any>{
@@ -20,14 +24,24 @@ export class ApiService {
     return this.http.get(`${environment.url}/users/${id}`);
   }
 
-  public todo(todo): Observable<any> {
-    window.localStorage.setItem('todo', JSON.stringify(todo));
-    return this.http.get(`${environment.url}/users/${this.getOne}`)
+  public getTodos(token): Observable<Todo> {
+    window.localStorage.setItem('token', JSON.stringify(token));
+    return this.http.get<Todo>(`${environment.url}/todo-list`, {headers: { token } });
+  };
+
+  public addTodo(data): Observable<Todo>{
+    // console.log(data)
+    return this.http.post<Todo>(`${environment.url}/todo-list`, {title: data.title}, {headers: { token: data.token } });
   }
 
-  // public registration(user): Observable<any> {
-  //   window.localStorage.setItem('user', JSON.stringify(user));
-  //   this.http.post(`${environment.url}/users/`, this.form.getRawValue()).subscribe((user: User) => {
-  //   });
-  // }
+  public deleteTodo(data): Observable<Todo>{
+    const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
+    console.log(data)
+    return this.http.delete<Todo>(`${environment.url}/todo-list/${id}`,  {headers: { token: data.token } });
+    //{todo: data.todo}, add body
+  }
+
+  public updateTodo(todo: Todo, token): Observable<any> {
+    return this.http.put(`${environment.url}/todo-list/`, todo, httpOptions);
+  }
 }

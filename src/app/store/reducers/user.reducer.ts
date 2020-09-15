@@ -29,7 +29,6 @@ export function reducer(state = initialState, action: UserActions): State {
   switch (action.type) {
     case UserActionTypes.userAddUser:
     case UserActionTypes.userGetUserById:
-      console.log('userAddUser',action.payload);
       return {
         ...state,
         loading: true

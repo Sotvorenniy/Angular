@@ -23,25 +23,39 @@ export const initialState: State = adapter.getInitialState({
 export function reducer(state = initialState, action: TodoActions): State {
 
   switch (action.type) {
-    case TodoActionTypes.todoSetTodo:
+
+    case TodoActionTypes.todoGetTodo:
       return {
-        ...state,
-        todo: action.payload,
-        loading: true
+        ...state
       };
 
     case TodoActionTypes.todoAddTodo:
+      return  {
+      ...state,
+    }
+
+    case TodoActionTypes.todoAddTodoSuccess:
+      return {
+    ...state,
+      todo: [...state.todo, action.payload]
+    }
+
+    case TodoActionTypes.todoGetTodoSuccess:
       return {
         ...state,
-        todo: [...state.todo, action.payload],
-        loading: true
+        todo: action.payload
       };
 
     case TodoActionTypes.todoDeleteTodo:
-      return {
+      return adapter.removeOne(action.payload.id, {
         ...state,
-        todo: state.todo.filter((todo) => todo.id !== action.payload.id),
-      };
+        todo: [...state.todo, action.payload]
+      });
+
+      // return {
+      //   ...state,
+      //   todo: state.todo.filter((todo) => todo.id !== action.payload.id),
+      // };
 
 
     case TodoActionTypes.todoError:

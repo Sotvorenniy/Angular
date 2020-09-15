@@ -13,6 +13,7 @@ import { RouterStateUrl } from './router';
 import {RouterEffects} from './effects/router.effects';
 import {routerReducer, RouterReducerState} from '@ngrx/router-store';
 import {UserEffects} from "./effects/users.effects";
+import {TodoEffects} from "./effects/todo.effects";
 
 
 export interface State {
@@ -34,7 +35,7 @@ export const selectUsersState = createSelector(
 );
 
 
-export const effects = [RouterEffects, UserEffects];
+export const effects = [RouterEffects, UserEffects, TodoEffects];
 
 export const metaReducers: MetaReducer<State>[] = !environment.production
   ? [storeFreeze]

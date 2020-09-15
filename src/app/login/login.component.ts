@@ -18,7 +18,7 @@ import {getUserSelector} from "../store/selectors/user.selector";
 export class LoginComponent implements OnInit, OnDestroy {
 
   public subscribes = [];
-  public  user$ = this.store.pipe(select(getUserSelector));
+  public user$ = this.store.pipe(select(getUserSelector));
   public hide = true;
   public user: User;
 

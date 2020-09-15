@@ -1,26 +1,42 @@
 import { Action } from '@ngrx/store';
 import { Todo } from '../models/todo.model';
-
+import {UserActionTypes} from "./user.actions";
 
 export enum TodoActionTypes {
-  todoSetTodo = '[Todo] set',
-  todoAddTodo = '[Todo] add todo',
+  todoAddTodo = '[Todo] set',
+  todoAddTodoSuccess = '[Todo] add todo',
   todoGetTodoById = '[Todo] get todo by id',
   todoUpdateTodo = '[Todo] update todo',
   todoError = '[Todo] error',
-  todoDeleteTodo = '[Todo] delete'
+  todoDeleteTodo = '[Todo] delete',
+  todoGetTodo = '[Todo] get todo',
+  todoGetTodoSuccess = '[Todo] get todo Success',
+  todoDeleteTodoSuccess = '[Todo] delete todo success'
 };
 
-export class SetTodo implements Action {
-  readonly type = TodoActionTypes.todoSetTodo;
-  constructor(public payload: Todo[]){}
+export class GetTodo implements Action {
+  readonly type = TodoActionTypes.todoGetTodo;
+
+  constructor(public payload?: any) {}
+}
+
+export class GetTodoSuccess implements Action {
+  readonly type = TodoActionTypes.todoGetTodoSuccess;
+
+  constructor(public payload?: any) {}
 }
 
 export class AddTodo implements Action {
   readonly type = TodoActionTypes.todoAddTodo;
+  constructor(public payload: any) {}
+}
+
+export class AddTodoSuccess implements Action {
+  readonly type = TodoActionTypes.todoAddTodoSuccess;
 
   constructor(public payload: Todo) {}
 }
+
 
 export class GetTodoById implements Action {
   readonly type = TodoActionTypes.todoGetTodoById;
@@ -32,9 +48,14 @@ export class UpdateTodo implements Action {
   constructor(public payload: Todo) {}
 }
 
+export class DeleteTodoSuccess implements Action {
+  readonly type = TodoActionTypes.todoDeleteTodoSuccess;
+  constructor(public payload: any) {}
+}
+
 export class DeleteTodo implements Action {
   readonly type = TodoActionTypes.todoDeleteTodo;
-  constructor(public payload: Todo) {}
+  constructor(public payload: any) {}
 }
 
 export class TodoError implements Action {
@@ -42,10 +63,14 @@ export class TodoError implements Action {
   constructor(public payload: any) {}
 }
 
+
 export type TodoActions =
-  | SetTodo
+  | AddTodoSuccess
   | AddTodo
   | GetTodoById
   | UpdateTodo
   | TodoError
-  | DeleteTodo;
+  | GetTodo
+  | GetTodoSuccess
+  | DeleteTodo
+  | DeleteTodoSuccess;

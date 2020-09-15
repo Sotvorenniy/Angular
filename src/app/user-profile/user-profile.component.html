@@ -38,23 +38,14 @@
         </form>
       </mat-card-content>
 
-      <mat-card-content>
-        <h2>Пароль:</h2>
-        <form >
-          <mat-form-field class="name-input">
-            <input matInput value="{{user?.password}}">
-          </mat-form-field>
-        </form>
-      </mat-card-content>
-
     </div>
     </form>
 
     <mat-card-actions>
     <mat-card-footer class="footer-btn-user">
 
-      <button mat-flat-button color="primary" (click)="editUser()"> Сохранить изменения </button>
-      <button mat-flat-button color="warn" (click)="goBack()"> Отменить изменения </button>
+      <button mat-flat-button class="btn-width" color="primary" (click)="editUser()"> Сохранить </button>
+      <button mat-flat-button class="btn-width" color="warn" (click)="goBack()"> Отменить </button>
 
     </mat-card-footer>
     </mat-card-actions>
