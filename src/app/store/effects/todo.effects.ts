@@ -3,17 +3,17 @@ import {Actions, createEffect, Effect, ofType} from '@ngrx/effects';
 import {switchMap, map, catchError, tap, debounceTime, exhaustMap} from 'rxjs/operators';
 import { of } from 'rxjs';
 import * as fromRouterActions from '../actions/router.actions';
-import {ApiService} from "../../services/api.service";
+import {ApiService} from '../../services/api.service';
 import {
   TodoActionTypes,
-  AddTodo,
+  SetTodoTitle,
   AddTodoSuccess,
   TodoError,
-  GetTodo,
+  GetToken,
   GetTodoSuccess,
   DeleteTodo,
-  DeleteTodoSuccess
-} from "../actions/todo.actions";
+  DeleteTodoSuccess, UpdateTodo, UpdateTodoSuccess
+} from '../actions/todo.actions';
 
 @Injectable()
 
@@ -27,9 +27,9 @@ export class TodoEffects {
 
   @Effect()
   todo$ = createEffect(() => this.actions$.pipe(
-    ofType<GetTodo>(TodoActionTypes.todoGetTodo),
+    ofType<GetToken>(TodoActionTypes.todoGetToken),
     exhaustMap((action) =>
-      this.apiService.getTodos(action.payload).pipe(
+      this.apiService.getTodos().pipe(
         map((data: any) =>
           {
             // console.log('---todo-list----',data)
@@ -51,7 +51,7 @@ export class TodoEffects {
     map((data: any) =>
 {
   console.log('---DeleteTodo----',data);
-  return new DeleteTodoSuccess(data)
+  return new DeleteTodoSuccess(data);
 }
 ),
 catchError((response: any) =>
@@ -62,16 +62,29 @@ of(new TodoError(response)))
 
   @Effect()
   todoAdd$ = createEffect( () => this.actions$.pipe(
-    ofType<AddTodo>(TodoActionTypes.todoAddTodo),
+    ofType<SetTodoTitle>(TodoActionTypes.todoSetTitle),
     exhaustMap((action) =>
     this.apiService.addTodo(action.payload).pipe(
       map((data:any) =>
       {
-        console.log("---add_todo---", data);
+        // console.log("---add_todo---", data);
         return new AddTodoSuccess(data)
       }),
       catchError((response: any) =>
   of(new TodoError(response)))
+    ))
+  ))
+
+  @Effect()
+  updateTodo$ = createEffect( () => this.actions$.pipe(
+    ofType<UpdateTodo>( TodoActionTypes.todoUpdateTodo ),
+    exhaustMap((action) =>
+    this.apiService.updateTodo(action.payload).pipe(
+      map((data:any) => {
+        console.log("------update_todo------", data );
+        return new UpdateTodoSuccess(data) }),
+    catchError((response:any) =>
+    of(new TodoError(response)))
     ))
   ))
 

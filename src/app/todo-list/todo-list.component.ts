@@ -4,13 +4,13 @@ import {select, Store} from '@ngrx/store';
 // @ts-ignore
 import * as fromReducer from '../store/reducers';
 import {HttpClient} from '@angular/common/http';
-import {AddTodo, DeleteTodo, GetTodo} from '../store/actions/todo.actions';
-import {getTodoSelector} from "../store/selectors/todo.selector";
-import {filter} from "rxjs/operators";
+import {SetTodoTitle, DeleteTodo, GetToken, UpdateTodo} from '../store/actions/todo.actions';
+import {getTodoSelector} from '../store/selectors/todo.selector';
+import {filter} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {User} from "../store/models/user.model";
-import {getUserSelector} from "../store/selectors/user.selector";
-import {ApiService} from "../services/api.service";
+import {User} from '../store/models/user.model';
+import {getUserSelector} from '../store/selectors/user.selector';
+import {ApiService} from '../services/api.service';
 
 
 @Component({
@@ -23,6 +23,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public todoList: Todo[];
   public todoList$ = this.store.pipe(select(getTodoSelector), filter(Boolean));
   public todoTitle: string;
+  public editing: boolean;
   public idForTodo: number;
   public beforeEditCache: string;
   public filter: string;
@@ -33,6 +34,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
 
   public user$ = this.store.pipe(select(getUserSelector), filter(Boolean));
+
   constructor(
     private store: Store<fromReducer.todos.State>,
     private http: HttpClient,
@@ -42,21 +44,23 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
 
   public ngOnInit(): void {
+
     this.filter = 'all';
     this.beforeEditCache = '';
     this.todoTitle = '';
+    this.editing = false;
 
     this.subscribes.push(
 
       this.user$.subscribe( (user: User) => {
-        this.user= user;
+        this.user = user;
          if(user.token){
-           this.store.dispatch(new GetTodo(user.token));
+           this.store.dispatch(new GetToken(user.token));
          }
       }),
 
-      this.todoList$.subscribe((todoList) => {
-        // console.log('todoList$',todoList);
+      // fixme
+      this.todoList$.subscribe((todoList: Todo[]) => {
         this.todoList = this.todosFiltered(todoList);
       })
     );
@@ -67,9 +71,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   public addTodo(): void {
-
     if (this.todoTitle.trim().length !== 0) {
-      this.store.dispatch(new AddTodo({
+      this.store.dispatch(new SetTodoTitle({
          title:  this.todoTitle,
         token: this.user.token
       }))
@@ -79,33 +82,52 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
 
   public editTodo(todo: Todo): void {
+    const alreadyEditingTodos = this.todoList.filter((todo) => todo.hasOwnProperty('tempTitle'));
 
-    this.beforeEditCache = todo.title;
-    todo.editing = true;
-  }
-
-  public doneEdit(todo: Todo): void {
-    if (todo.title.trim().length === 0) {
-      todo.title = this.beforeEditCache;
-      todo.editing = false;
+    if (alreadyEditingTodos.length) {
+      alreadyEditingTodos.forEach((todo) => {
+        this.cancelEdit(todo);
+      });
     }
+
+    this.todoList = this.todoList.map( (item) => {
+      if (item.id === todo.id) {
+        return { ...item, tempTitle: item.title};
+      }
+      return item;
+    } );
+
   }
 
   public cancelEdit(todo: Todo): void {
-    todo.title = this.beforeEditCache;
-    todo.editing = false;
+    this.todoList = this.todoList.map( (item) => {
+      if (item.id === todo.id) {
+        const {tempTitle, ...newItem} = item;
+        return newItem;
+      }
+      return item;
+    } );
+  }
+
+  public doneEdit(todo: Todo): void {
+
+    console.log("doneEdit ---- todo", todo);
+
+    // todo dispatch
+    this.store.dispatch(new UpdateTodo({
+      todo:  todo,
+      token: this.user.token
+    })
+    )
   }
 
   public deleteTodo(todo: Todo): void {
-    console.log(todo);
-    this.todoList$.subscribe((todo: Todo) => {this.store.dispatch(new DeleteTodo({
+    this.store.dispatch(new DeleteTodo({
       todo:  todo,
       token: this.user.token
-    }
-    )
-    )
     })
-  }
+    )
+    }
 
   public todosFiltered(todoList): Todo[] {
     if (this.filter === 'all') {

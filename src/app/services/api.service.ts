@@ -24,8 +24,8 @@ export class ApiService {
     return this.http.get(`${environment.url}/users/${id}`);
   }
 
-  public getTodos(token): Observable<Todo> {
-    window.localStorage.setItem('token', JSON.stringify(token));
+  public getTodos(): Observable<Todo> {
+    const token = window.localStorage.getItem('token');
     return this.http.get<Todo>(`${environment.url}/todo-list`, {headers: { token } });
   };
 
@@ -36,12 +36,20 @@ export class ApiService {
 
   public deleteTodo(data): Observable<Todo>{
     const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
-    console.log(data)
     return this.http.delete<Todo>(`${environment.url}/todo-list/${id}`,  {headers: { token: data.token } });
     //{todo: data.todo}, add body
   }
 
-  public updateTodo(todo: Todo, token): Observable<any> {
-    return this.http.put(`${environment.url}/todo-list/`, todo, httpOptions);
+  public updateTodo(data): Observable<any> {
+
+    const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
+
+    console.log("data", data);
+    console.log("id", id );
+    console.log("data.todo", data.todo);
+    console.log("data.todo.id", data.todo.id);
+    console.log("data.token", data.token);
+
+    return this.http.put(`${environment.url}/todo-list/${id}`, {headers: { token: data.token } });
   }
 }

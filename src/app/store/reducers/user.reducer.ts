@@ -50,11 +50,10 @@ export function reducer(state = initialState, action: UserActions): State {
         loaded: true
       });
 
-    // case UserActionTypes.userGetUserByIdSuccess:
-    //   return { ...state, selectedUserId: action.payload.id, loading: false };
 
     case UserActionTypes.userGetUserSuccess:
-      console.log('userGetUserSuccess',action.payload);
+      console.log('userGetUserSuccess', action.payload);
+      window.localStorage.setItem('token', action.payload.token);
       return adapter.addOne(action.payload, {
         ...state,
         user: action.payload,

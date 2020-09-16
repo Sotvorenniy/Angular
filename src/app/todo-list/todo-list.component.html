@@ -31,7 +31,7 @@
                       (change)="doneEdit(todo)">
         </mat-checkbox>
 
-        <div *ngIf="!todo.editing; else editingTodo"
+        <div *ngIf="!todo.hasOwnProperty('tempTitle'); else editingTodo"
              class="todo-item-label"
              [ngClass]="{ 'completed' : todo.completed }"
              (dblclick)="editTodo(todo)">
@@ -39,7 +39,7 @@
         </div>
         <ng-template #editingTodo>
           <input matInput class="todo-item-edit"
-                 [(ngModel)]="todo.title"
+                 [(ngModel)]="todo.tempTitle"
                  (blur)="doneEdit(todo)"
                  (keyup.enter)="doneEdit(todo)"
                  (keyup.esc)="cancelEdit(todo)"

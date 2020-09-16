@@ -1,21 +1,28 @@
 import { Action } from '@ngrx/store';
 import { Todo } from '../models/todo.model';
-import {UserActionTypes} from "./user.actions";
 
 export enum TodoActionTypes {
-  todoAddTodo = '[Todo] set',
-  todoAddTodoSuccess = '[Todo] add todo',
+  todoSetTitle = '[Todo] set: title & token',
+  todoAddTodoSuccess = '[Todo] add todo Success',
+  todoAddTodo = '[Todo] add todo',
   todoGetTodoById = '[Todo] get todo by id',
   todoUpdateTodo = '[Todo] update todo',
   todoError = '[Todo] error',
   todoDeleteTodo = '[Todo] delete',
-  todoGetTodo = '[Todo] get todo',
-  todoGetTodoSuccess = '[Todo] get todo Success',
-  todoDeleteTodoSuccess = '[Todo] delete todo success'
-};
+  todoGetToken = '[Todo] get token on login',
+  todoGetTodoSuccess = '[Todo] get todo Success after login',
+  todoDeleteTodoSuccess = '[Todo] delete todo success',
+  todoUpdateTodoSuccess = '[Todo] update todo success',
+}
 
-export class GetTodo implements Action {
-  readonly type = TodoActionTypes.todoGetTodo;
+export class AddTodo implements Action {
+  readonly type = TodoActionTypes.todoAddTodo;
+
+  constructor(public payload?: any) {}
+}
+
+export class GetToken implements Action {
+  readonly type = TodoActionTypes.todoGetToken;
 
   constructor(public payload?: any) {}
 }
@@ -26,14 +33,13 @@ export class GetTodoSuccess implements Action {
   constructor(public payload?: any) {}
 }
 
-export class AddTodo implements Action {
-  readonly type = TodoActionTypes.todoAddTodo;
+export class SetTodoTitle implements Action {
+  readonly type = TodoActionTypes.todoSetTitle;
   constructor(public payload: any) {}
 }
 
 export class AddTodoSuccess implements Action {
   readonly type = TodoActionTypes.todoAddTodoSuccess;
-
   constructor(public payload: Todo) {}
 }
 
@@ -45,6 +51,11 @@ export class GetTodoById implements Action {
 
 export class UpdateTodo implements Action {
   readonly type = TodoActionTypes.todoUpdateTodo;
+  constructor(public payload: any) {}
+}
+
+export class UpdateTodoSuccess implements Action {
+  readonly type = TodoActionTypes.todoUpdateTodoSuccess;
   constructor(public payload: Todo) {}
 }
 
@@ -66,11 +77,13 @@ export class TodoError implements Action {
 
 export type TodoActions =
   | AddTodoSuccess
-  | AddTodo
+  | SetTodoTitle
   | GetTodoById
   | UpdateTodo
   | TodoError
-  | GetTodo
+  | GetToken
   | GetTodoSuccess
   | DeleteTodo
-  | DeleteTodoSuccess;
+  | DeleteTodoSuccess
+  | AddTodo
+  | UpdateTodoSuccess;

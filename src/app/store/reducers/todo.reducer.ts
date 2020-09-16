@@ -24,21 +24,21 @@ export function reducer(state = initialState, action: TodoActions): State {
 
   switch (action.type) {
 
-    case TodoActionTypes.todoGetTodo:
+    case TodoActionTypes.todoGetToken:
+      return {
+        ...state,
+      };
+
+    case TodoActionTypes.todoSetTitle:
       return {
         ...state
       };
-
-    case TodoActionTypes.todoAddTodo:
-      return  {
-      ...state,
-    }
 
     case TodoActionTypes.todoAddTodoSuccess:
       return {
     ...state,
       todo: [...state.todo, action.payload]
-    }
+    };
 
     case TodoActionTypes.todoGetTodoSuccess:
       return {
@@ -47,16 +47,36 @@ export function reducer(state = initialState, action: TodoActions): State {
       };
 
     case TodoActionTypes.todoDeleteTodo:
-      return adapter.removeOne(action.payload.id, {
+      return adapter.removeOne(action.payload.todo.id, {
         ...state,
-        todo: [...state.todo, action.payload]
+        todo: [...state.todo.filter((todo) => todo.id !== action.payload.todo.id)],
       });
 
-      // return {
-      //   ...state,
-      //   todo: state.todo.filter((todo) => todo.id !== action.payload.id),
-      // };
+    case TodoActionTypes.todoUpdateTodo:
 
+      console.log( "REDUSER ___ _ _ todoUpdateTodo ----- action.payload", action.payload);
+      console.log( "REDUSER ______ todoUpdateTodo ---- action.payload.tempTitle", action.payload.tempTitle);
+      console.log( "REDUCER todoUpdateTodo action.payload.title", action.payload.title);
+      console.log("REDUCEEER -----todoUpdateTodo------ action.payload.id", action.payload.id)
+
+      return {
+        ...state,
+        // todo: [...state.todo.map( (todo) => todo.id == action.payload.todo.id) ]
+      };
+
+    case TodoActionTypes.todoUpdateTodoSuccess:
+
+      console.log( "REDUSER ___ _ _ _todoUpdateTodoSuccess ----- action.payload", action.payload);
+      console.log( "REDUSER ______ todoUpdateTodoSuccess ---- action.payload.tempTitle", action.payload.tempTitle);
+      console.log( "REDUCER ______todoUpdateTodoSuccess action.payload.title", action.payload.title);
+      console.log("REDUCEEER -----______todoUpdateTodoSuccess------ action.payload.id", action.payload.id)
+
+      return {
+        ...state,
+        todo: [...state.todo]
+      };
+
+      //.map( (todo) => todo.id == action.payload.todo.id)
 
     case TodoActionTypes.todoError:
       return {
