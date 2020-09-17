@@ -19,8 +19,7 @@
 
     <mat-form-field appearance="outline" class="todo-input">
     <input matInput placeholder="Запиши, что нужно сделать и нажми Enter"
-           [(ngModel)]="todoTitle"
-           (keyup.enter)="addTodo()">
+                    (keyup.enter)="addTodo($event)">
     </mat-form-field>
 
     <div class="todo-item" *ngFor="let todo of todoList">
@@ -28,7 +27,7 @@
 
         <mat-checkbox color="primary"
                       [(ngModel)]="todo.completed"
-                      (change)="doneEdit(todo)">
+                      (change)="checkTodo(todo)">
         </mat-checkbox>
 
         <div *ngIf="!todo.hasOwnProperty('tempTitle'); else editingTodo"

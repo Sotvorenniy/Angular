@@ -29,16 +29,12 @@ export function reducer(state = initialState, action: TodoActions): State {
         ...state,
       };
 
-    case TodoActionTypes.todoSetTitle:
-      return {
-        ...state
-      };
 
     case TodoActionTypes.todoAddTodoSuccess:
       return {
-    ...state,
-      todo: [...state.todo, action.payload]
-    };
+        ...state,
+        todo: [...state.todo, action.payload]
+      };
 
     case TodoActionTypes.todoGetTodoSuccess:
       return {
@@ -53,30 +49,45 @@ export function reducer(state = initialState, action: TodoActions): State {
       });
 
     case TodoActionTypes.todoUpdateTodo:
+      return { ...state,
+        todo: [...state.todo.map((item) => {
 
-      console.log( "REDUSER ___ _ _ todoUpdateTodo ----- action.payload", action.payload);
-      console.log( "REDUSER ______ todoUpdateTodo ---- action.payload.tempTitle", action.payload.tempTitle);
-      console.log( "REDUCER todoUpdateTodo action.payload.title", action.payload.title);
-      console.log("REDUCEEER -----todoUpdateTodo------ action.payload.id", action.payload.id)
-
-      return {
-        ...state,
-        // todo: [...state.todo.map( (todo) => todo.id == action.payload.todo.id) ]
+          if (item.id === action.payload.todo.id) {
+            return {
+              ...item, title: action.payload.todo.tempTitle
+            }
+          }
+          return item;
+        }) ]
       };
 
     case TodoActionTypes.todoUpdateTodoSuccess:
-
-      console.log( "REDUSER ___ _ _ _todoUpdateTodoSuccess ----- action.payload", action.payload);
-      console.log( "REDUSER ______ todoUpdateTodoSuccess ---- action.payload.tempTitle", action.payload.tempTitle);
-      console.log( "REDUCER ______todoUpdateTodoSuccess action.payload.title", action.payload.title);
-      console.log("REDUCEEER -----______todoUpdateTodoSuccess------ action.payload.id", action.payload.id)
-
       return {
         ...state,
         todo: [...state.todo]
       };
 
-      //.map( (todo) => todo.id == action.payload.todo.id)
+    case TodoActionTypes.todoUpdateTodoCheck:
+
+      return {
+        ...state,
+        todo: [...state.todo.map((item) => {
+
+          if (item.id === action.payload.todo.id) {
+
+            return {
+              ...item, completed: !Boolean(action.payload.todo.completed)
+            }
+          }
+          return item;
+        }) ]
+      };
+
+    case TodoActionTypes.todoUpdateTodoCheckSuccess:
+      return {
+        ...state,
+        todo: [...state.todo]
+      };
 
     case TodoActionTypes.todoError:
       return {

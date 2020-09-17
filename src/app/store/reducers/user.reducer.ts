@@ -43,7 +43,7 @@ export function reducer(state = initialState, action: UserActions): State {
       };
 
     case UserActionTypes.userAddUserSuccess:
-      console.log('userAddUserSuccess',action.payload);
+      // console.log('userAddUserSuccess',action.payload);
       return adapter.setAll([action.payload], {
         ...state,
         loading: false,
@@ -52,7 +52,7 @@ export function reducer(state = initialState, action: UserActions): State {
 
 
     case UserActionTypes.userGetUserSuccess:
-      console.log('userGetUserSuccess', action.payload);
+      // console.log('userGetUserSuccess', action.payload);
       window.localStorage.setItem('token', action.payload.token);
       return adapter.addOne(action.payload, {
         ...state,

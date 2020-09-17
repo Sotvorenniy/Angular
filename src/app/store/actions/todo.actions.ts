@@ -13,6 +13,8 @@ export enum TodoActionTypes {
   todoGetTodoSuccess = '[Todo] get todo Success after login',
   todoDeleteTodoSuccess = '[Todo] delete todo success',
   todoUpdateTodoSuccess = '[Todo] update todo success',
+  todoUpdateTodoCheck = '[Todo] update todo check',
+  todoUpdateTodoCheckSuccess = '[Todo] update todo check success'
 }
 
 export class AddTodo implements Action {
@@ -59,6 +61,16 @@ export class UpdateTodoSuccess implements Action {
   constructor(public payload: Todo) {}
 }
 
+export class UpdateTodoCheck implements Action {
+  readonly type = TodoActionTypes.todoUpdateTodoCheck;
+  constructor(public payload: any) {}
+}
+export class UpdateTodoCheckSuccess implements Action {
+  readonly type = TodoActionTypes.todoUpdateTodoCheckSuccess;
+  constructor(public payload: any) {}
+}
+
+
 export class DeleteTodoSuccess implements Action {
   readonly type = TodoActionTypes.todoDeleteTodoSuccess;
   constructor(public payload: any) {}
@@ -86,4 +98,6 @@ export type TodoActions =
   | DeleteTodo
   | DeleteTodoSuccess
   | AddTodo
-  | UpdateTodoSuccess;
+  | UpdateTodoSuccess
+  | UpdateTodoCheck
+  | UpdateTodoCheckSuccess;

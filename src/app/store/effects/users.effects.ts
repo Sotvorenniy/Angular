@@ -23,7 +23,6 @@ import {ApiService} from "../../services/api.service";
 export class UserEffects {
 
 
-  @Effect()
    login$ = createEffect(() => this.actions$.pipe(
     ofType<GetUser>(UserActionTypes.userGetUser),
     exhaustMap((action) =>

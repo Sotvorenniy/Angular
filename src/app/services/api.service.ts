@@ -4,8 +4,6 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {Todo} from "../store/models/todo.model";
 
-
-
 const httpOptions = {
   headers: new HttpHeaders(localStorage.getItem("token")),
 };
@@ -20,36 +18,33 @@ export class ApiService {
     return this.http.post(`${environment.url}/users/login`, user);
   }
 
-  public getOne(id: number){
-    return this.http.get(`${environment.url}/users/${id}`);
-  }
-
   public getTodos(): Observable<Todo> {
     const token = window.localStorage.getItem('token');
     return this.http.get<Todo>(`${environment.url}/todo-list`, {headers: { token } });
   };
 
   public addTodo(data): Observable<Todo>{
-    // console.log(data)
-    return this.http.post<Todo>(`${environment.url}/todo-list`, {title: data.title}, {headers: { token: data.token } });
+    const token = window.localStorage.getItem('token');
+    return this.http.post<Todo>(`${environment.url}/todo-list`, {title: data.title , completed: false}, {headers: { token } });
   }
 
   public deleteTodo(data): Observable<Todo>{
     const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
-    return this.http.delete<Todo>(`${environment.url}/todo-list/${id}`,  {headers: { token: data.token } });
-    //{todo: data.todo}, add body
+    const token = window.localStorage.getItem('token');
+    return this.http.delete<Todo>(`${environment.url}/todo-list/${id}`,  {headers: { token } });
   }
 
   public updateTodo(data): Observable<any> {
-
+    const token = window.localStorage.getItem('token');
     const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
 
-    console.log("data", data);
-    console.log("id", id );
-    console.log("data.todo", data.todo);
-    console.log("data.todo.id", data.todo.id);
-    console.log("data.token", data.token);
+    return this.http.put(`${environment.url}/todo-list/${id}`, {title: data.todo.tempTitle }, {headers: { token } });
+  }
 
-    return this.http.put(`${environment.url}/todo-list/${id}`, {headers: { token: data.token } });
+  public updateTodoCheck(data): Observable<any> {
+    const token = window.localStorage.getItem('token');
+    const id = typeof data.todo === 'number' ? data.todo : data.todo.id;
+
+    return  this.http.put( `${environment.url}/todo-list/${id}`, {completed: !data.todo.completed}, {headers: {token}} );
   }
 }

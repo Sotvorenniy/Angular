@@ -4,7 +4,7 @@ import {select, Store} from '@ngrx/store';
 // @ts-ignore
 import * as fromReducer from '../store/reducers';
 import {HttpClient} from '@angular/common/http';
-import {SetTodoTitle, DeleteTodo, GetToken, UpdateTodo} from '../store/actions/todo.actions';
+import {SetTodoTitle, DeleteTodo, GetToken, UpdateTodo, UpdateTodoCheck} from '../store/actions/todo.actions';
 import {getTodoSelector} from '../store/selectors/todo.selector';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
@@ -22,10 +22,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   public todoList: Todo[];
   public todoList$ = this.store.pipe(select(getTodoSelector), filter(Boolean));
-  public todoTitle: string;
   public editing: boolean;
-  public idForTodo: number;
-  public beforeEditCache: string;
   public filter: string;
   public value = 'Очистить';
   public subscribes = [];
@@ -46,8 +43,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
 
     this.filter = 'all';
-    this.beforeEditCache = '';
-    this.todoTitle = '';
     this.editing = false;
 
     this.subscribes.push(
@@ -59,7 +54,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
          }
       }),
 
-      // fixme
+      //fixme rerender
       this.todoList$.subscribe((todoList: Todo[]) => {
         this.todoList = this.todosFiltered(todoList);
       })
@@ -70,20 +65,41 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.subscribes.map((s) => s.unsubscribe());
   }
 
-  public addTodo(): void {
-    if (this.todoTitle.trim().length !== 0) {
+  public addTodo(event: any): void {
+    const value = event.target.value;
+
+    if (value.trim().length){
       this.store.dispatch(new SetTodoTitle({
-         title:  this.todoTitle,
-        token: this.user.token
+        title: value,
+        completed: false,
       }))
     }
-    this.todoTitle = '';
+
+    event.target.value = '';
+
+  }
+
+  public checkTodo(todo: Todo): void {
+
+   this.todoList = this.todoList.map( (item) => {
+     const completedValue = Boolean(item.completed);
+
+     if (item.id === todo.id) {
+       return { ...item, completed: !completedValue}
+     }
+     return item;
+   })
+
+    this.store.dispatch(new UpdateTodoCheck({
+        todo:  todo,
+      })
+    );
   }
 
 
   public editTodo(todo: Todo): void {
-    const alreadyEditingTodos = this.todoList.filter((todo) => todo.hasOwnProperty('tempTitle'));
 
+    const alreadyEditingTodos = this.todoList.filter((todo) => todo.hasOwnProperty('tempTitle'));
     if (alreadyEditingTodos.length) {
       alreadyEditingTodos.forEach((todo) => {
         this.cancelEdit(todo);
@@ -94,6 +110,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       if (item.id === todo.id) {
         return { ...item, tempTitle: item.title};
       }
+
       return item;
     } );
 
@@ -109,14 +126,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     } );
   }
 
-  public doneEdit(todo: Todo): void {
-
-    console.log("doneEdit ---- todo", todo);
-
-    // todo dispatch
+  public doneEdit(todo: Todo){
     this.store.dispatch(new UpdateTodo({
       todo:  todo,
-      token: this.user.token
     })
     )
   }
@@ -124,7 +136,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public deleteTodo(todo: Todo): void {
     this.store.dispatch(new DeleteTodo({
       todo:  todo,
-      token: this.user.token
     })
     )
     }

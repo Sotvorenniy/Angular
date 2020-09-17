@@ -3,6 +3,5 @@ export interface Todo {
   title: string;
   tempTitle?: string;
   completed: boolean;
-  // editing: boolean;
   user_id?: number | string;
 }
