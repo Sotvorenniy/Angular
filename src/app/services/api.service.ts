@@ -47,4 +47,14 @@ export class ApiService {
 
     return  this.http.put( `${environment.url}/todo-list/${id}`, {completed: !data.todo.completed}, {headers: {token}} );
   }
+
+  public logout() {
+   window.localStorage.removeItem('token');
+  }
+
+  public isAuthenticated(): boolean {
+    const token = window.localStorage.getItem('token');
+    return !!token;
+  }
+
 }

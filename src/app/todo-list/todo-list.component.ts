@@ -75,10 +75,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public checkTodo(todo: Todo): void {
 
    this.todoList = this.todoList.map( (item) => {
-     const completedValue = Boolean(item.completed);
 
      if (item.id === todo.id) {
-       return { ...item, completed: !completedValue}
+       return { ...item, completed: !Boolean(item.completed)}
      }
      return item;
    })

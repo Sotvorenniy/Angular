@@ -11,6 +11,7 @@ import {getUserSelector} from "../store/selectors/user.selector";
 import {catchError, exhaustMap, map} from "rxjs/operators";
 import {of} from "rxjs";
 import {ApiService} from "../services/api.service";
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private store: Store<fromReducer.users.State>,
     private http: HttpClient,
     private apiService: ApiService,
+    private router: Router,
     ){}
 
   public ngOnInit(): void{
@@ -52,6 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.apiService.login(this.form.getRawValue()).subscribe(
       (user: User) => {
         this.store.dispatch(new GetUser(user));
+        this.router.navigate(['todo-list']);
       },
       (error) => {
         this.store.dispatch(new UserError(error));

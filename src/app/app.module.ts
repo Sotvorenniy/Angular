@@ -21,7 +21,7 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-s
 import {CustomRouterStateSerializer} from './store/router';
 import {HttpClientModule} from '@angular/common/http';
 import {ApiService} from "./services/api.service";
-// import {AuthGuard} from "./auth.guard";
+import {AuthGuard} from "../app/auth.guard";
 
 
 @NgModule({
@@ -45,8 +45,7 @@ import {ApiService} from "./services/api.service";
     RouterModule.forRoot([
       {path: '', component: LoginComponent},
       {path: 'registration', component: RegistrationComponent},
-      {path: 'todo-list', component: TodoListComponent},
-      //canActivate: [AuthGuard]
+      {path: 'todo-list', component: TodoListComponent, canActivate: [AuthGuard]},
       {path: 'user-profile', component: UserProfileComponent},
       ]
     ),
@@ -65,7 +64,7 @@ import {ApiService} from "./services/api.service";
       useClass: CustomRouterStateSerializer,
     },
     ApiService,
-    // AuthGuard
+    AuthGuard
   ],
   bootstrap: [AppComponent],
 })
