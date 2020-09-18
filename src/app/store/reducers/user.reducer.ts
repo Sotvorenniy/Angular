@@ -54,6 +54,8 @@ export function reducer(state = initialState, action: UserActions): State {
     case UserActionTypes.userGetUserSuccess:
       // console.log('userGetUserSuccess', action.payload);
       window.localStorage.setItem('token', action.payload.token);
+      window.localStorage.setItem('user', JSON.stringify(action.payload));
+
       return adapter.addOne(action.payload, {
         ...state,
         user: action.payload,

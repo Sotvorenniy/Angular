@@ -4,10 +4,13 @@ import {select, Store} from '@ngrx/store';
 // @ts-ignore
 import * as fromReducer from '../store/reducers';
 import {User} from '../store/models/user.model';
-import {GetUser} from '../store/actions/user.actions';
+import {AddUser, GetUser, GetUserSuccess, UserError} from '../store/actions/user.actions';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {getUserSelector} from "../store/selectors/user.selector";
+import {catchError, exhaustMap, map} from "rxjs/operators";
+import {of} from "rxjs";
+import {ApiService} from "../services/api.service";
 
 
 @Component({
@@ -32,6 +35,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private store: Store<fromReducer.users.State>,
     private http: HttpClient,
+    private apiService: ApiService,
     ){}
 
   public ngOnInit(): void{
@@ -45,8 +49,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public checkUser(): void {
-    this.store.dispatch(new GetUser((this.form.getRawValue())));
-
+    this.apiService.login(this.form.getRawValue()).subscribe(
+      (user: User) => {
+        this.store.dispatch(new GetUser(user));
+      },
+      (error) => {
+        this.store.dispatch(new UserError(error));
+      }
+    );
   }
 
   public getErrorMessage(): string {

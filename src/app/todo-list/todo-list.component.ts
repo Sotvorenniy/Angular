@@ -28,8 +28,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   public subscribes = [];
   public user: User;
   public environment = environment.url;
-
-
   public user$ = this.store.pipe(select(getUserSelector), filter(Boolean));
 
   constructor(
@@ -42,19 +40,13 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
 
+    const token = window.localStorage.getItem('token');
+    this.store.dispatch(new GetToken(token));
+
     this.filter = 'all';
     this.editing = false;
 
     this.subscribes.push(
-
-      this.user$.subscribe( (user: User) => {
-        this.user = user;
-         if(user.token){
-           this.store.dispatch(new GetToken(user.token));
-         }
-      }),
-
-      //fixme rerender
       this.todoList$.subscribe((todoList: Todo[]) => {
         this.todoList = this.todosFiltered(todoList);
       })
@@ -77,6 +69,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
     event.target.value = '';
 
+    console.log(  JSON.parse(window.localStorage.getItem('todo')));
   }
 
   public checkTodo(todo: Todo): void {

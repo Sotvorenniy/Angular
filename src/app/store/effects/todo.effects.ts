@@ -31,7 +31,7 @@ export class TodoEffects {
       this.apiService.getTodos().pipe(
         map((data: any) =>
           {
-            // console.log('---todo-list----',data)
+            // window.localStorage.setItem('todo', JSON.stringify(data));
             return new GetTodoSuccess(data)
           }
         ),
@@ -80,8 +80,8 @@ export class TodoEffects {
     exhaustMap((action) =>{
       return this.apiService.updateTodo(action.payload).pipe(
         map((data:any) => {
-          console.log("EFFECT action.payload", action.payload)
-          console.log("EFFECT ------update_todo------", data );
+          // console.log("EFFECT action.payload", action.payload)
+          // console.log("EFFECT ------update_todo------", data );
           return new UpdateTodoSuccess(data) }),
         catchError((response:any) =>
           of(new TodoError(response)))

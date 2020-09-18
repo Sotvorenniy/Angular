@@ -21,30 +21,15 @@ import {ApiService} from "../../services/api.service";
 
 @Injectable()
 export class UserEffects {
-
-
-   login$ = createEffect(() => this.actions$.pipe(
-    ofType<GetUser>(UserActionTypes.userGetUser),
-    exhaustMap((action) =>
-      this.apiService.login(action.payload).pipe(
-        map((data: any) =>
-          {
-            // console.log('---login$----',data)
-            return new GetUserSuccess(data)
-          }
-        ),
-        catchError((response: any) =>
-          of(new UserError(response)),
-        ),
-      )
-    ),
-  ));
-
   constructor(
     private apiService: ApiService,
     private actions$: Actions
-  ) {
-  }
+  ) {}
 
+  login$ = createEffect(() => this.actions$.pipe(
+    ofType<GetUser>(UserActionTypes.userGetUser),
+    map((action) => new GetUserSuccess(action.payload)
+    ),
+  ));
 }
 

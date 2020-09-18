@@ -4,9 +4,9 @@ import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {Todo} from "../store/models/todo.model";
 
-const httpOptions = {
-  headers: new HttpHeaders(localStorage.getItem("token")),
-};
+// const httpOptions = {
+//   headers: new HttpHeaders(localStorage.getItem("token")),
+// };
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
@@ -14,7 +14,7 @@ export class ApiService {
   }
 
   public login(user): Observable<any>{
-    window.localStorage.setItem('user', JSON.stringify(user));
+    // window.localStorage.setItem('user', JSON.stringify(user));
     return this.http.post(`${environment.url}/users/login`, user);
   }
 
